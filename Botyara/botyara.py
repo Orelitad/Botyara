@@ -16,60 +16,6 @@ import sqlite3
 
 
 poopoo = [1, 0, 0, 0, 0, 0, 0]
-# BaseModel = declarative_base()
-# metadata = MetaData()
-# class user_answers(BaseModel):
-#     __tablename__ = 'ariva'
-#     user_id = Column(Integer, unique=True, nullable=False, primary_key=True)
-#     user_first_name = Column(VARCHAR(32), unique=False, nullable=True)
-#     chat_id = Column(Integer)
-#     first_message = Column(VARCHAR(32))
-#     second_message = Column(VARCHAR(32))
-#     third_message = Column(VARCHAR(32))
-#     fourth_message = Column(VARCHAR(32))
-#     status = Column(String)
-
-# async def connection():
-# engine = create_async_engine('postgresql+asyncpg://localhost/db.sqlite', echo=True)
-# session = scoped_session(sessionmaker(bind=engine))
-#
-# Base.metadata.create_all(bind=engine)
-# engine = create_async_engine('postgresql+asyncpg://localhost/db.sqlite', echo=True)
-# async with engine.begin() as conn:
-#     await conn.run_sync(BaseModel.metadata.create_all)
-# async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-#
-# async with async_session() as session:
-#     async with session.begin():
-#         session.add_all([user_answers(user_id=user_id, chat_id=chat_id, first_message=first_message,
-#                                       second_message=second_message, third_message=third_message,
-#                                       fourth_message=fourth_message, status=status)])
-
-
-# BaseModel.metadata.create_all(bind=engine)
-# Session = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
-# session = Session()
-
-# async def connection():
-#     user_id = poopoo[-2]
-#     chat_id = poopoo[-1]
-#     first_message = poopoo[0]
-#     second_message = poopoo[1]
-#     third_message = poopoo[2]
-#     fourth_message = poopoo[3]
-#     status = poopoo[4]
-#     engine = create_async_engine('postgresql+asyncpg://localhost/db.sqlite', echo=True) #user:password@localhost
-#     async with engine.begin() as conn:
-#         await conn.run_sync(BaseModel.metadata.create_all)
-#     async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-#     # async_session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession))
-#     async with async_session() as session:
-#         async with session.begin():
-#             session.add_all([user_answers(user_id=user_id, chat_id=chat_id, first_message=first_message,
-#                                           second_message=second_message, third_message=third_message,
-#                                           fourth_message=fourth_message, status=status)])
-#             session.commit()
-
 
 async def conn_start():
     conn = sqlite3.connect('db.sqlite')
@@ -92,8 +38,6 @@ async def conn_start():
 @dp.message_handler(commands=["start"])
 async def cmd_start(message: types.message):
     await conn_start()
-    # await connection()
-
     poopoo[-1] = message.chat.id
     poopoo[-2] = message.from_user.first_name
     await bot.send_message(chat_id=message.chat.id,
@@ -263,54 +207,11 @@ async def bot_save_end(message: types.message, state: FSMContext):
     third_message = poopoo[2]
     fourth_message = poopoo[3]
     status = poopoo[4]
-    # async_engine = create_async_engine('postgresql+asyncpg://username:password@localhost:5432/db.sqlite', echo=True)  # user:password@localhost
-    # async with async_engine.begin() as conn:
-    #     await conn.run_sync(BaseModel.metadata.create_all)
-    # async_session = sessionmaker(bind=async_engine, expire_on_commit=False, class_=AsyncSession)
-    # # async_session = scoped_session(sessionmaker(bind=engine, expire_on_commit=False, class_=AsyncSession))
-    # async with async_session() as session:
-    #     async with session.begin():
-    #         session.add_all([user_answers(user_id=user_id, chat_id=chat_id, first_message=first_message,
-    #                                       second_message=second_message, third_message=third_message,
-    #                                       fourth_message=fourth_message, status=status)])
-    #         session.commit()
-    # user_id = poopoo[-2]
-    # chat_id = poopoo[-1]
-    # first_message = poopoo[0]
-    # second_message = poopoo[1]
-    # third_message = poopoo[2]
-    # fourth_message = poopoo[3]
-    # status = poopoo[4]
-    # Answers = user_answers(user_id=user_id, chat_id=chat_id, first_message=first_message, second_message=second_message, third_message=third_message, fourth_message=fourth_message, status=status)
-    # session.add(Answers)
-    # session.commit()
-    # # conn = sqlite3.connect('db.sqlite')
-    # # cursor = conn.cursor()
-    #
-    # postgres_url = URL.create(
-    #     "postgresql+asyncpg",
-    #     username=os.getenv("db_user"),
-    #     host="localhost",
-    #     database=os.getenv("db_name"),
-    #     port=os.getenv("db_port")
-    # )
-    #
-    # async_engine = create_async_engine(postgres_url)
-    # async with async_engine.begin() as conn:
-    #     session = get_session_maker(
-    #         bind=conn,
-    #         class_=AsyncSession,
-    #         expire_on_commit=False,
-    #     )
-    #
-    # async with session() as s:
-    #     async with session.begin():
-    #         # s.add(chat_id)
-    
     conn = sqlite3.connect('db.sqlite')
     cursor = conn.cursor()
     cursor.execute(f"INSERT INTO answers (user_id, chat_id, first_message, second_message, third_message, fourth_message, status) VALUES ('{user_id}','{chat_id}','{first_message}','{second_message}','{third_message}','{fourth_message}','{status}')")
     conn.commit()
+    await MainState.cmd_start
 
 
 
