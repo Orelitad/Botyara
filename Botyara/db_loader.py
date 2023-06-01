@@ -13,19 +13,3 @@ bot = Bot(token=TOKEN_API)
 storage = MemoryStorage()
 dp = Dispatcher(bot,
                 storage=storage)
-
-# async def main():
-#     postgres_url = URL.create(
-#         "postgressql+asyncpg",
-#         username=os.getenv("db_user"),
-#         host="localhost",
-#         database=os.getenv("db_name"),
-#         port=os.getenv("db_port")
-#     )
-#
-#     async_engine = create_async_engine(postgres_url)
-#     session_maker = get_session_maker(async_engine)
-#     await proceed_schemas(async_engine, BaseModel.metadata)
-#
-#     await dp.start_polling(bot)
-
